@@ -1,0 +1,19 @@
+{
+    "name": "modular/framework",
+    "description": "Modular framework is a modern PHP data structure to work with decoupling, perfect for layered architectures like Clean Architecture, Hexagonal and Microservices, offering resources for Infrastructure, WebUI and Database layers.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jorge Luiz",
+            "email": "jorgeluiz1586@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modular\\Framework\\": "framework/src/"
+        }
+    }
+}
