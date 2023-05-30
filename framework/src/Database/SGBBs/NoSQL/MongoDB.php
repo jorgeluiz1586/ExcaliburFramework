@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Database\NoSQL;
+namespace Excalibur\Framework\Database\NoSQL;
 
-use Modular\Framework\Database\Interfaces\DatabaseInterface;
-use Modular\Framework\Database\Interfaces\DatabaseConnectionInterface;
+use Excalibur\Framework\Database\Interfaces\DatabaseInterface;
+use Excalibur\Framework\Database\Interfaces\DatabaseConnectionInterface;
 
 class MongoDB implements DatabaseInterface
 {

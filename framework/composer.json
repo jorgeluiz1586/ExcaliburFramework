@@ -1,0 +1,19 @@
+{
+    "name": "excalibur/framework",
+    "keywords": ["framework", "modular"],
+    "description": "Excalibur framework is a modern PHP data structure to work with decoupling, perfect for layered architectures like Clean Architecture, Hexagonal and Microservices, offering resources for Infrastructure, WebUI and Database layers.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jorge Luiz",
+            "email": "jorgeluiz1586@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Excalibur\\Framework\\": "src/"
+        }
+    }
+}

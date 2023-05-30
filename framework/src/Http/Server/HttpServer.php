@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Http\Server;
+namespace Excalibur\Framework\Http\Server;
 
 class HttpServer
 {

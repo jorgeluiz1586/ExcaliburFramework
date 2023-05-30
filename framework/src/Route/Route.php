@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Route;
+namespace Excalibur\Framework\Route;
 
-use Modular\Framework\Route\Router;
+use Excalibur\Framework\Route\Router;
 
 class Route
 {

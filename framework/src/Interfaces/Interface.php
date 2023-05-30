@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Interfaces;
+namespace Excalibur\Framework\Interfaces;
 
 interface ApplicationInterface
 {

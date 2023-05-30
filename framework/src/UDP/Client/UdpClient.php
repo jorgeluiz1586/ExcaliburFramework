@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Udp;
+namespace Excalibur\Framework\Udp;
 
 class UdpClient
 {

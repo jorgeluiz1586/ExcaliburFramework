@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Http\Server;
+namespace Excalibur\Framework\Http\Server;
 
-use Modular\Framework\Http\Interfaces\KernelInterface;
-use Modular\Framework\Route\Router;
+use Excalibur\Framework\Http\Interfaces\KernelInterface;
+use Excalibur\Framework\Route\Router;
 
 class HttpKernel implements KernelInterface
 {

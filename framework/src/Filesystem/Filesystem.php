@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework;
+namespace Excalibur\Framework;
 
 class Filesystem
 {

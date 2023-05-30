@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework;
+namespace Excalibur\Framework;
 
-use Infrastructure\Http\Interfaces\KernelInterface;
+use Excalibur\Framework\Http\Interfaces\KernelInterface;
 
 class Application
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Tcp;
+namespace Excalibur\Framework\Tcp;
 
 class TcpClient
 {

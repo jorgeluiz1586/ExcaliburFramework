@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\GRPC\Server;
+namespace Excalibur\Framework\GRPC\Server;
 
 class GrpcServer
 {

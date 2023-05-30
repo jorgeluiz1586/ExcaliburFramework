@@ -1,11 +1,11 @@
 <?php
 
-namespace Modular\Framework\Database\Orm;
+namespace Excalibur\Framework\Database\Orm;
 
-use Modular\Framework\Database\Interfaces\DatabaseInterface;
-use Modular\Framework\Database\Interfaces\DatabaseConnectionInterface;
+use Excalibur\Framework\Database\Interfaces\DatabaseInterface;
+use Excalibur\Framework\Database\Interfaces\DatabaseConnectionInterface;
 
-class ModularOrm
+class ExcaliburOrm
 {
     private DatabaseConnectionInterface $connection;
 

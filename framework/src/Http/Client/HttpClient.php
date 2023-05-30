@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Http\Client;
+namespace Excalibur\Framework\Http\Client;
 
 class HttpClient
 {

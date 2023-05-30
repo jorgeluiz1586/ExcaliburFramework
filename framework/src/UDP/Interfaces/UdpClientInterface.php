@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Udp\Interfaces;
+namespace Excalibur\Framework\Udp\Interfaces;
 
 class UdpClientInterface
 {

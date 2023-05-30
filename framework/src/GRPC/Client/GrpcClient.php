@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\GRPC\Client;
+namespace Excalibur\Framework\GRPC\Client;
 
 class GrpcClient
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Database\SQL;
+namespace Excalibur\Framework\Database\SQL;
 
-use Modular\Framework\Database\Interfaces\DatabaseInterface;
-use Modular\Framework\Database\Interfaces\DatabaseConnectionInterface;
+use Excalibur\Framework\Database\Interfaces\DatabaseInterface;
+use Excalibur\Framework\Database\Interfaces\DatabaseConnectionInterface;
 
 class SQLite implements DatabaseInterface
 {

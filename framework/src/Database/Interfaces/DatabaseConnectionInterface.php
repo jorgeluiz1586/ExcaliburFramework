@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Database\Interfaces;
+namespace Excalibur\Framework\Database\Interfaces;
 
 interface DatabaseConnectionInterface
 {

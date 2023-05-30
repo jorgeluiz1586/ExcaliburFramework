@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modular\Framework\Route;
+namespace Excalibur\Framework\Route;
 
 use Application\Http\Message\Request\Request;
 use Application\Http\Message\Response\Response;
