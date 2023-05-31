@@ -13,7 +13,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Excalibur\\Framework\\": "framework/src/"
+            "Excalibur\\Framework\\": "src/"
         }
     }
 }
