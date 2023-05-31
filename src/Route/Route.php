@@ -8,7 +8,7 @@ use Excalibur\Framework\Route\Router;
 
 class Route
 {
-    public static function get(string $path, callable|string|array $handle)
+    public static function get(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
            return self::getControllerAndActionFromString($path, $handle, "GET");
@@ -21,7 +21,7 @@ class Route
         }
     }
 
-    public static function post(string $path, callable|string|array $handle)
+    public static function post(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
             return self::getControllerAndActionFromString($path, $handle, "POST");
@@ -36,7 +36,7 @@ class Route
         }
     }
 
-    public static function put(string $path, callable|string|array $handle)
+    public static function put(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
             return self::getControllerAndActionFromString($path, $handle, "PUT");
@@ -51,7 +51,7 @@ class Route
         }
     }
 
-    public static function patch(string $path, callable|string|array $handle)
+    public static function patch(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
             return self::getControllerAndActionFromString($path, $handle, "PATCH");
@@ -66,7 +66,7 @@ class Route
         }
     }
 
-    public static function delete(string $path, callable|string|array $handle)
+    public static function delete(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
             return self::getControllerAndActionFromString($path, $handle, "DELETE");
@@ -81,7 +81,7 @@ class Route
         }
     }
 
-    public static function apiResource(string $path, callable|string|array $handle)
+    public static function apiResource(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
@@ -91,7 +91,7 @@ class Route
         }
     }
 
-    public static function resource(string $path, callable|string|array $handle)
+    public static function resource(string $path, callable|string|array $handle): object
     {
         if (gettype($handle) === "string") {
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
