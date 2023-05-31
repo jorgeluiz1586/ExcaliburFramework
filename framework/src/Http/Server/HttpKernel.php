@@ -6,6 +6,10 @@ namespace Excalibur\Framework\Http\Server;
 
 use Excalibur\Framework\Http\Interfaces\KernelInterface;
 use Excalibur\Framework\Route\Router;
+use Application\Http\Message\Request\Request;
+use Application\Http\Message\Response\Response;
+use Infrastructure\Config\Database;
+use Infrastructure\Helpers\Env;
 
 class HttpKernel implements KernelInterface
 {
@@ -24,7 +28,30 @@ class HttpKernel implements KernelInterface
         }
 
         if ($type === "api") {
-            return Router::searchRoute($httpMethod, $handle);
+            $routeFound = Router::searchRoute($httpMethod, $handle);
+            if (empty($routeFound->route)) {
+                header("HTTP/1.1 404 Not Found");
+                return "Error";
+            }
+
+            $request = (new Request());
+            $response = (new Response());
+
+            $input = file_get_contents("php://input");
+
+            if ($input !== null || $input !== "") {
+                $request->body = (object) json_decode($input);
+            }
+
+            if ($routeFound->route[0]['controller'] === null) {
+                return print_r($routeFound->route['action']($request, $response));
+            }
+
+            $request->params = (object) $routeFound->params;
+
+            self::checkMiddleware($request, $routeFound->route);
+
+            return print_r($routeFound->route['controller']->{$routeFound->route['action']}($request, $response));
         }
         return Router::searchWebRoute($httpMethod, $handle, ((object) ["isBot" => $isBot, "isSPA" => $isSPA]));
     }
@@ -95,4 +122,30 @@ class HttpKernel implements KernelInterface
             str_contains($_SERVER['REQUEST_URI'], "/css") ||
             str_contains($_SERVER['REQUEST_URI'], "/favicon");
     }
+
+    private static function checkMiddleware(object $request, array $route)
+    {
+        if (isset($route['middleware']) && strlen($route['middleware']) > 0) {
+            $token = $request->getToken();
+            if (gettype($token) === "string" && strlen($token) > 8) {
+                $result = (object) Database::config()->query(
+                    "SELECT * FROM tokens where token = '".$token."';")->fetchObject();
+            } else {
+                header("HTTP/1.1 401 Unauthorized");
+                print_r("Error! Unauthorized");
+                die();
+            }
+        }
+    }
+
+
+    private static function injectDependencies(array $dependencyPathArray, string $path, string $fileType)
+    {
+        $applicationPathArray    = $dependencyPathArray;
+        $applicationPathArray[0] = "$path";
+        unset($applicationPathArray[1]);
+        $applicationPathArray[2] = str_replace("Controller", "$fileType", $dependencyPathArray[2]);
+        return implode("\\", $applicationPathArray);
+    }
+
 }
