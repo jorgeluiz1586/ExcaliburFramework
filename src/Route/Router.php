@@ -83,7 +83,7 @@ class Router
         return [...self::$webRoutes];
     }
 
-    public static function setRoute(string $method, string $path, string|null $controller, string|callable $action)
+    public static function setRoute(string $method, string $path, string|null $controller, string|callable $action): object
     {
         $controllerObject = null;
         if ($controller !== null) {
@@ -113,7 +113,7 @@ class Router
     }
 
 
-    public static function setWebRoute(string $method, string $path, string $viewPath)
+    public static function setWebRoute(string $method, string $path, string $viewPath): object
     {
         $view = "";
         if (str_contains($path, '_')) {
