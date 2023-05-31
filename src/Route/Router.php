@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Excalibur\Framework\Route;
 
-use Excalibur\Framework\Middlewares\Handle;
+use Excalibur\Framework\Middlewares\Handler;
 
 class Router
 {
@@ -101,7 +101,7 @@ class Router
             ["method" => $method, "uri" => $path, "controller" => $controllerObject,
                                     "action" => $action, "middleware" => ""]);
 
-        $middleware = new Handle();
+        $middleware = new Handler();
         $middleware->type = "api";
 
         return $middleware;
@@ -136,7 +136,7 @@ class Router
             array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
         }
 
-        $middleware = new Handle();
+        $middleware = new Handler();
         $middleware->type = "web";
 
         return $middleware;
