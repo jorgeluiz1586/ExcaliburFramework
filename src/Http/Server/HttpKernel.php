@@ -31,8 +31,7 @@ class HttpKernel implements KernelInterface
             return $this->processApiRequest(Router::searchRoute($httpMethod, $handle));
         }
 
-        return $this->processWebRequest(
-            Router::searchWebRoute($httpMethod, $handle));
+        return $this->processWebRequest(Router::searchWebRoute($httpMethod, $handle));
     }
 
     private function processApiRequest($routeFound)
@@ -82,7 +81,7 @@ class HttpKernel implements KernelInterface
             header("HTTP/1.1 200 OK");
             header("Content-Type: text/html");
             $pages = [];
-            foreach (self::$webRoutes as $item) {
+            foreach (Router::$webRoutes as $item) {
                 View::setView(explode("/", $item['view'])[1]);
                 View::$isBot = BotChecker::check() ? "true" : "false";
 
@@ -204,15 +203,4 @@ class HttpKernel implements KernelInterface
             }
         }
     }
-
-
-    private static function injectDependencies(array $dependencyPathArray, string $path, string $fileType)
-    {
-        $applicationPathArray    = $dependencyPathArray;
-        $applicationPathArray[0] = "$path";
-        unset($applicationPathArray[1]);
-        $applicationPathArray[2] = str_replace("Controller", "$fileType", $dependencyPathArray[2]);
-        return implode("\\", $applicationPathArray);
-    }
-
 }
