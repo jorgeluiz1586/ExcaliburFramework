@@ -36,7 +36,7 @@ class HttpKernel implements KernelInterface
 
     private function processApiRequest($routeFound)
     {
-            if (empty($routeFound->route)) {
+            if ($routeFound->route === null) {
                 header("HTTP/1.1 404 Not Found");
                 return "Error";
             }
@@ -63,7 +63,7 @@ class HttpKernel implements KernelInterface
 
     private function processWebRequest($routeFound)
     {
-        if (count($routeFound->route) <= 0) {
+        if ($routeFound->route === null) {
             header("HTTP/1.1 404 Not Found");
             return print_r("Page do not found");
         } else {
@@ -72,7 +72,7 @@ class HttpKernel implements KernelInterface
                
                 header("Content-Type: text/html");
                 $result = [];
-                View::setView([...$routeFound->route][0]['view']);
+                View::setView([...$routeFound->route]['view']);
                 View::$isBot = BotChecker::check() ? "true" : "false";
                 View::$params = (object) $routeFound->params;
                 $result = View::render();
@@ -81,7 +81,7 @@ class HttpKernel implements KernelInterface
             header("HTTP/1.1 200 OK");
             header("Content-Type: text/html");
             $pages = [];
-            foreach (Router::$webRoutes as $item) {
+            foreach (Router::getWebRoutes() as $item) {
                 View::setView(explode("/", $item['view'])[1]);
                 View::$isBot = BotChecker::check() ? "true" : "false";
 

@@ -14,7 +14,7 @@ class Router
         $routeObject = (object) self::getParamsInRoute("api", $method, $handle->route);
 
         return (object) [
-            "route" => $routeObject->route[0],
+            "route" => count($routeObject->route) > 0 ? $routeObject->route[0] : null,
             "params" => (object) [...$routeObject->params, ...$handle->params],
         ];
     }
@@ -25,7 +25,7 @@ class Router
         $routeObject = (object) self::getParamsInRoute("web", $method, $handle->route);
 
         return (object) [
-            "route" => $routeObject->route[0],
+            "route" => count($routeObject->route) > 0 ? $routeObject->route[0] : null,
             "params" => (object) [...$routeObject->params, ...$handle->params],
         ];
     }
@@ -71,6 +71,16 @@ class Router
                 }
             }
         }
+    }
+
+    public static function getRoutes(): array
+    {
+        return [...self::$routes];
+    }
+
+    public static function getWebRoutes(): array
+    {
+        return [...self::$webRoutes];
     }
 
     public static function setRoute(string $method, string $path, string|null $controller, string|callable $action)
