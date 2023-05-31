@@ -99,8 +99,8 @@ class Router
             ["method" => $method, "uri" => $path, "controller" => $controllerObject,
                                     "action" => $action, "middleware" => ""]);
 
-        return (object) [
-            "middleware" => function (string|array $middlewareName = ""): object {
+        return new class {
+            public function middleware(string|array $middlewareName = ""): object {
                 foreach(self::$routes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$routes[$key]["middleware"] = $middlewareName;
@@ -108,8 +108,8 @@ class Router
                 }
 
                 return $this;
-            },
-        ];
+            }
+        };
     }
 
 
@@ -141,8 +141,8 @@ class Router
             array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
         }
 
-        return (object) [
-            "middleware" => function (string|array $middlewareName = ""): object {
+        return new class {
+            public function middleware(string|array $middlewareName = ""): object {
                 foreach(self::$webRoutes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$webRoutes[$key]["middleware"] = $middlewareName;
@@ -150,7 +150,7 @@ class Router
                 }
 
                 return $this;
-            },
-        ];
+            }
+        };
     }
 }
