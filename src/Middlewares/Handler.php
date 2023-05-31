@@ -9,11 +9,12 @@ use Excalibur\Framework\Route\Router;
 class Handler
 {
     public $type = "api";
+    public $path = "api";
 
     public function middleware(string|array $middlewareName = ""): object {
         if ($this->type === "web") {
             foreach(Router::getWebRoutes() as $key => $route) {
-                if ($route["uri"] === $path) {
+                if ($route["uri"] === $this->path) {
                     Router::getWebRoutes()[$key]["middleware"] = $middlewareName;
                 }
             }
@@ -22,7 +23,7 @@ class Handler
         }
 
         foreach(Router::getRoutes() as $key => $route) {
-            if ($route["uri"] === $path) {
+            if ($route["uri"] === $this->path) {
                 Router::getRoutes()[$key]["middleware"] = $middlewareName;
             }
         }

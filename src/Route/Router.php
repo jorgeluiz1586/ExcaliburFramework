@@ -103,6 +103,7 @@ class Router
 
         $middleware = new Handler();
         $middleware->type = "api";
+        $middleware->path = $path;
 
         return $middleware;
     }
@@ -138,6 +139,7 @@ class Router
 
         $middleware = new Handler();
         $middleware->type = "web";
+        $middleware->path = $path;
 
         return $middleware;
     }
