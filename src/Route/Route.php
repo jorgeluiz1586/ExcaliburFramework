@@ -11,7 +11,7 @@ class Route
     public static function get(string $path, callable|string|array $handle)
     {
         if (gettype($handle) === "string") {
-           self::getControllerAndActionFromString($path, $handle, "GET");
+           return self::getControllerAndActionFromString($path, $handle, "GET");
         } elseif (is_callable($handle)) {
             return Router::setRoute("GET", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array") && count($handle) === 2) {
@@ -24,7 +24,7 @@ class Route
     public static function post(string $path, callable|string|array $handle)
     {
         if (gettype($handle) === "string") {
-            self::getControllerAndActionFromString($path, $handle, "POST");
+            return self::getControllerAndActionFromString($path, $handle, "POST");
         } elseif (is_callable($handle)) {
             return Router::setRoute("POST", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
@@ -39,7 +39,7 @@ class Route
     public static function put(string $path, callable|string|array $handle)
     {
         if (gettype($handle) === "string") {
-            self::getControllerAndActionFromString($path, $handle, "PUT");
+            return self::getControllerAndActionFromString($path, $handle, "PUT");
         } elseif (is_callable($handle)) {
             return Router::setRoute("PUT", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
@@ -54,7 +54,7 @@ class Route
     public static function patch(string $path, callable|string|array $handle)
     {
         if (gettype($handle) === "string") {
-            self::getControllerAndActionFromString($path, $handle, "PATCH");
+            return self::getControllerAndActionFromString($path, $handle, "PATCH");
         } elseif (is_callable($handle)) {
             return Router::setRoute("PATCH", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
@@ -69,7 +69,7 @@ class Route
     public static function delete(string $path, callable|string|array $handle)
     {
         if (gettype($handle) === "string") {
-            self::getControllerAndActionFromString($path, $handle, "DELETE");
+            return self::getControllerAndActionFromString($path, $handle, "DELETE");
         } elseif (is_callable($handle)) {
             return Router::setRoute("DELETE", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
