@@ -43,7 +43,7 @@ class HttpKernel implements KernelInterface
                 $request->body = (object) json_decode($input);
             }
 
-            if ($routeFound->route[0]['controller'] === null) {
+            if ($routeFound->route['controller'] === null) {
                 return print_r($routeFound->route['action']($request, $response));
             }
 
