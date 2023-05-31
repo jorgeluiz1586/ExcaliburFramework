@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Excalibur\Framework\Route;
 
+use Excalibur\Framework\Middlewares\Handle;
+
 class Router
 {
     private static $routes = [];
@@ -99,17 +101,10 @@ class Router
             ["method" => $method, "uri" => $path, "controller" => $controllerObject,
                                     "action" => $action, "middleware" => ""]);
 
-        return new class {
-            public function middleware(string|array $middlewareName = ""): object {
-                foreach(\Excalibur\Framework\Route\Router::$routes as $key => $route) {
-                    if ($route["uri"] === $path) {
-                        self::$routes[$key]["middleware"] = $middlewareName;
-                    }
-                }
+        $middleware = new Handle();
+        $middleware->type = "api";
 
-                return $this;
-            }
-        };
+        return $middleware;
     }
 
 
@@ -141,16 +136,9 @@ class Router
             array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
         }
 
-        return new class {
-            public function middleware(string|array $middlewareName = ""): object {
-                foreach(\Excalibur\Framework\Route\Router::$webRoutes as $key => $route) {
-                    if ($route["uri"] === $path) {
-                        self::$webRoutes[$key]["middleware"] = $middlewareName;
-                    }
-                }
+        $middleware = new Handle();
+        $middleware->type = "web";
 
-                return $this;
-            }
-        };
+        return $middleware;
     }
 }
