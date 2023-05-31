@@ -100,14 +100,14 @@ class Router
                                     "action" => $action, "middleware" => ""]);
 
         return new class {
-            public function middleware(string|array $middlewareName = ""): object {
+            public static function middleware(string|array $middlewareName = ""): self {
                 foreach(self::$routes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$routes[$key]["middleware"] = $middlewareName;
                     }
                 }
 
-                return $this;
+                return self;
             }
         };
     }
@@ -142,14 +142,14 @@ class Router
         }
 
         return new class {
-            public function middleware(string|array $middlewareName = ""): object {
+            public static function middleware(string|array $middlewareName = ""): self {
                 foreach(self::$webRoutes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$webRoutes[$key]["middleware"] = $middlewareName;
                     }
                 }
 
-                return $this;
+                return self;
             }
         };
     }
