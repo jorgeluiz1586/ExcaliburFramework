@@ -100,7 +100,7 @@ class Router
                                     "action" => $action, "middleware" => ""]);
 
         return (object) [
-            "middleware" => function (string|array $middlewareName = "") use ($path): object {
+            "middleware" => function (string|array $middlewareName = ""): object {
                 foreach(self::$routes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$routes[$key]["middleware"] = $middlewareName;
@@ -142,7 +142,7 @@ class Router
         }
 
         return (object) [
-            "middleware" => function (string|array $middlewareName = "") use ($path) {
+            "middleware" => function (string|array $middlewareName = ""): object {
                 foreach(self::$webRoutes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$webRoutes[$key]["middleware"] = $middlewareName;
