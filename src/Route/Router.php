@@ -100,14 +100,14 @@ class Router
                                     "action" => $action, "middleware" => ""]);
 
         return new class {
-            public static function middleware(string|array $middlewareName = ""): self {
-                foreach(self::$routes as $key => $route) {
+            public function middleware(string|array $middlewareName = ""): object {
+                foreach(\Excalibur\Framework\Route\Router::$routes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$routes[$key]["middleware"] = $middlewareName;
                     }
                 }
 
-                return self;
+                return $this;
             }
         };
     }
@@ -142,14 +142,14 @@ class Router
         }
 
         return new class {
-            public static function middleware(string|array $middlewareName = ""): self {
-                foreach(self::$webRoutes as $key => $route) {
+            public function middleware(string|array $middlewareName = ""): object {
+                foreach(\Excalibur\Framework\Route\Router::$webRoutes as $key => $route) {
                     if ($route["uri"] === $path) {
                         self::$webRoutes[$key]["middleware"] = $middlewareName;
                     }
                 }
 
-                return self;
+                return $this;
             }
         };
     }
