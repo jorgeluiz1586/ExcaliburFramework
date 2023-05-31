@@ -98,6 +98,18 @@ class Router
         array_push(self::$routes,
             ["method" => $method, "uri" => $path, "controller" => $controllerObject,
                                     "action" => $action, "middleware" => ""]);
+
+        return (object) [
+            "middleware" => function (string|array $middlewareName = "") use ($path) {
+                foreach(self::$routes as $key => $route) {
+                    if ($route["uri"] === $path) {
+                        self::$routes[$key]["middleware"] = $middlewareName;
+                    }
+                }
+
+                return $this;
+            },
+        ];
     }
 
 
@@ -128,5 +140,17 @@ class Router
         } else {
             array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
         }
+
+        return (object) [
+            "middleware" => function (string|array $middlewareName = "") use ($path) {
+                foreach(self::$webRoutes as $key => $route) {
+                    if ($route["uri"] === $path) {
+                        self::$webRoutes[$key]["middleware"] = $middlewareName;
+                    }
+                }
+
+                return $this;
+            },
+        ];
     }
 }

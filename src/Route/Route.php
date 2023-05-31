@@ -13,9 +13,9 @@ class Route
         if (gettype($handle) === "string") {
            self::getControllerAndActionFromString($path, $handle, "GET");
         } elseif (is_callable($handle)) {
-            Router::setRoute("GET", "/api".($path === "/" ? "" : $path), null, $handle);
+            return Router::setRoute("GET", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array") && count($handle) === 2) {
-            Router::setRoute("GET", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
+            return Router::setRoute("GET", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
         } else {
             throw (new \Exception("Error! Route is invalid"));
         }
@@ -26,10 +26,10 @@ class Route
         if (gettype($handle) === "string") {
             self::getControllerAndActionFromString($path, $handle, "POST");
         } elseif (is_callable($handle)) {
-            Router::setRoute("POST", "/api".($path === "/" ? "" : $path), null, $handle);
+            return Router::setRoute("POST", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
             if (count($handle) === 2) {
-                Router::setRoute("POST", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
+                return Router::setRoute("POST", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
             }
         } else {
             throw (new \Exception("Error! Route is invalid"));
@@ -41,10 +41,10 @@ class Route
         if (gettype($handle) === "string") {
             self::getControllerAndActionFromString($path, $handle, "PUT");
         } elseif (is_callable($handle)) {
-            Router::setRoute("PUT", "/api".($path === "/" ? "" : $path), null, $handle);
+            return Router::setRoute("PUT", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
             if (count($handle) === 2) {
-                Router::setRoute("PUT", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
+                return Router::setRoute("PUT", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
             }
         } else {
             throw (new \Exception("Error! Route is invalid"));
@@ -56,10 +56,10 @@ class Route
         if (gettype($handle) === "string") {
             self::getControllerAndActionFromString($path, $handle, "PATCH");
         } elseif (is_callable($handle)) {
-            Router::setRoute("PATCH", "/api".($path === "/" ? "" : $path), null, $handle);
+            return Router::setRoute("PATCH", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
             if (count($handle) === 2) {
-                Router::setRoute("PATCH", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
+                return Router::setRoute("PATCH", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
             }
         } else {
             throw (new \Exception("Error! Route is invalid"));
@@ -71,10 +71,10 @@ class Route
         if (gettype($handle) === "string") {
             self::getControllerAndActionFromString($path, $handle, "DELETE");
         } elseif (is_callable($handle)) {
-            Router::setRoute("DELETE", "/api".($path === "/" ? "" : $path), null, $handle);
+            return Router::setRoute("DELETE", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array")) {
             if (count($handle) === 2) {
-                Router::setRoute("DELETE", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
+                return Router::setRoute("DELETE", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
             }
         } else {
             throw (new \Exception("Error! Route is invalid"));
@@ -87,7 +87,7 @@ class Route
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
 
-            Router::setRoute("", "/api".($path === "/" ? "" : $path), $controller, $action);
+            return Router::setRoute("", "/api".($path === "/" ? "" : $path), $controller, $action);
         }
     }
 
@@ -97,7 +97,7 @@ class Route
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
 
-            Router::setRoute("", "/api".($path === "/" ? "" : $path), $controller, $action);
+            return Router::setRoute("", "/api".($path === "/" ? "" : $path), $controller, $action);
         }
     }
 
@@ -107,10 +107,10 @@ class Route
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
             $handleObj = (object) ["controller" => $controller, "action" => $action];
-            Router::setRoute("$method", "/api".($path === "/" ? "" : $path),
+            return Router::setRoute("$method", "/api".($path === "/" ? "" : $path),
                                 $handleObj->controller, $handleObj->action);
         } else {
-            Router::setWebRoute("$method", $path, $handle);
+            return Router::setWebRoute("$method", $path, $handle);
         }
     }
 }
