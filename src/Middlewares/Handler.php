@@ -9,7 +9,7 @@ use Excalibur\Framework\Route\Router;
 class Handler
 {
     public $type = "api";
-    public $path = "api";
+    public $path = "";
 
     public function middleware(string|array $middlewareName = ""): object {
         if ($this->type === "web") {
