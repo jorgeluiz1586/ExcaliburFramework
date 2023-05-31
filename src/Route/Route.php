@@ -101,7 +101,7 @@ class Route
         }
     }
 
-    private static function getControllerAndActionFromString(string $path, string $handle, string $method): void
+    private static function getControllerAndActionFromString(string $path, string $handle, string $method): object
     {
         if ($handle !== "" && str_contains($handle, "@")) {
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
