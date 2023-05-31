@@ -11,7 +11,7 @@ class Handler
     public $type = "api";
 
     public function middleware(string|array $middlewareName = ""): object {
-        if ($type === "web") {
+        if ($this->type === "web") {
             foreach(Router::getWebRoutes() as $key => $route) {
                 if ($route["uri"] === $path) {
                     Router::getWebRoutes()[$key]["middleware"] = $middlewareName;
