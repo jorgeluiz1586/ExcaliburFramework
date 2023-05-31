@@ -11,15 +11,13 @@ class Handler
     public $type = "api";
     public $path = "";
 
-    public function middleware(string|array $middlewareName = ""): object {
+    public function middleware(string|array $middlewareName = ""): void {
         if ($this->type === "web") {
             foreach(Router::getWebRoutes() as $key => $route) {
                 if ($route["uri"] === $this->path) {
                     Router::getWebRoutes()[$key]["middleware"] = $middlewareName;
                 }
             }
-    
-            return $this;
         }
 
         foreach(Router::getRoutes() as $key => $route) {
@@ -27,7 +25,5 @@ class Handler
                 Router::getRoutes()[$key]["middleware"] = $middlewareName;
             }
         }
-
-        return $this;
     }
 }
