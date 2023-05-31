@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Excalibur\Framework;
+namespace Excalibur\Framework\Application;
 
 use Excalibur\Framework\Http\Interfaces\KernelInterface;
 
