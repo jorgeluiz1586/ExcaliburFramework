@@ -133,9 +133,10 @@ class Router
     
     public static function setMiddlewareInRoute(string $path, string $middleware)
     {
+        print_r(self::$routes[$key]);
+        die();
         foreach(self::getRoutes() as $key => $route) {
             if ($route["uri"] === $path) {
-                print_r(self::$routes[$key]);
                 self::$routes[$key]["middleware"] = $middleware;
             }
         }
