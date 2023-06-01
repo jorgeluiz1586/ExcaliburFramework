@@ -15,8 +15,9 @@ class Handler
         if ($this->type === "web") {
             Router::setMiddlewareInWebRoute($this->path, $middlewareName);
             
+        } else {
+            Router::setMiddlewareInRoute($this->path, $middlewareName);
         }
 
-        Router::setMiddlewareInRoute($this->path, $middlewareName);
     }
 }
