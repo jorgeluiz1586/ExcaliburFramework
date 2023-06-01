@@ -172,7 +172,8 @@ class HttpKernel implements KernelInterface
 
         return (object) [
             "route" => $route,
-            "params" => [...$queryString, "token" => str_replace("Bearer ", "", $_SERVER["HTTP_AUTHORIZATION"])],
+            "params" => [...$queryString, "token" => isset($_SERVER["HTTP_AUTHORIZATION"])
+                            ? str_replace("Bearer ", "", $_SERVER["HTTP_AUTHORIZATION"]): null],
         ];
     }
 
