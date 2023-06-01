@@ -17,6 +17,6 @@ class Handler
             
         }
 
-        Router::setMiddlewareInRoutes($this->path, $middlewareName);
+        Router::setMiddlewareInRoute($this->path, $middlewareName);
     }
 }
