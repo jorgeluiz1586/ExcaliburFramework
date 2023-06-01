@@ -130,4 +130,23 @@ class Router
             array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
         }
     }
+    
+    public static function setMiddlewareInRoute(string $path, string $middleware)
+    {
+        foreach(Router::getRoutes() as $key => $route) {
+            if ($route["uri"] === $path) {
+                self::$routes[$key]["middleware"] = $middleware;
+            }
+        }
+    }
+
+    public static function setMiddlewareInWebRoute(string $path, string $middleware)
+    {
+        foreach(Router::getWebRoutes() as $key => $route) {
+            if ($route["uri"] === $path) {
+                self::$webRoutes[$key]["middleware"] = $middleware;
+            }
+        }
+    }
+
 }

@@ -13,17 +13,10 @@ class Handler
 
     public function middleware(string|array $middlewareName = ""): void {
         if ($this->type === "web") {
-            foreach(Router::getWebRoutes() as $key => $route) {
-                if ($route["uri"] === $this->path) {
-                    Router::getWebRoutes()[$key]["middleware"] = $middlewareName;
-                }
-            }
+            Router::setMiddlewareInWebRoute($this->path, $middlewareName);
+            
         }
 
-        foreach(Router::getRoutes() as $key => $route) {
-            if ($route["uri"] === $this->path) {
-                Router::getRoutes()[$key]["middleware"] = $middlewareName;
-            }
-        }
+        Router::setMiddlewareInRoutes($this->path, $middlewareName);
     }
 }
