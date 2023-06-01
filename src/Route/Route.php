@@ -11,13 +11,12 @@ class Route
 {
     public static function get(string $path, callable|string|array $handle): Handler
     {
-        $result = null;
         if (gettype($handle) === "string") {
-           $result = self::getControllerAndActionFromString($path, $handle, "GET");
+           self::getControllerAndActionFromString($path, $handle, "GET");
         } elseif (is_callable($handle)) {
-            $result = Router::setRoute("GET", "/api".($path === "/" ? "" : $path), null, $handle);
+            Router::setRoute("GET", "/api".($path === "/" ? "" : $path), null, $handle);
         } elseif (gettype($handle === "array") && count($handle) === 2) {
-            $result = Router::setRoute("GET", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
+            Router::setRoute("GET", "/api".($path === "/" ? "" : $path), $handle[0], $handle[1]);
         } else {
             throw (new \Exception("Error! Route is invalid"));
         }
@@ -25,7 +24,7 @@ class Route
         $middleware = new Handler();
         $middleware->type = "api";
         $middleware->path = $path;
-        return $result;
+        return $middleware;
     }
 
     public static function post(string $path, callable|string|array $handle): object
