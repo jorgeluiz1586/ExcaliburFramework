@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Excalibur\Framework\Route;
 
-use Excalibur\Framework\Middlewares\Handler;
-
 class Router
 {
     private static $routes = [];
@@ -85,7 +83,8 @@ class Router
         return [...self::$webRoutes];
     }
 
-    public static function setRoute(string $method, string $path, string|null $controller, string|callable $action): Handler
+    public static function setRoute(
+        string $method, string $path, string|null $controller, string|callable $action): void
     {
         $controllerObject = null;
         if ($controller !== null) {
@@ -100,16 +99,10 @@ class Router
         array_push(self::$routes,
             ["method" => $method, "uri" => $path, "controller" => $controllerObject,
                                     "action" => $action, "middleware" => ""]);
-
-        $middleware = new Handler();
-        $middleware->type = "api";
-        $middleware->path = $path;
-
-        return $middleware;
     }
 
 
-    public static function setWebRoute(string $method, string $path, string $viewPath): Handler
+    public static function setWebRoute(string $method, string $path, string $viewPath): void
     {
         $view = "";
         if (str_contains($path, '_')) {
@@ -136,11 +129,5 @@ class Router
         } else {
             array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
         }
-
-        $middleware = new Handler();
-        $middleware->type = "web";
-        $middleware->path = $path;
-
-        return $middleware;
     }
 }

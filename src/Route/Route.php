@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Excalibur\Framework\Route;
 
 use Excalibur\Framework\Route\Router;
+use Excalibur\Framework\Middlewares\Handler;
 
 class Route
 {
-    public static function get(string $path, callable|string|array $handle): object
+    public static function get(string $path, callable|string|array $handle): Handler
     {
         $result = null;
         if (gettype($handle) === "string") {
@@ -21,6 +22,9 @@ class Route
             throw (new \Exception("Error! Route is invalid"));
         }
 
+        $middleware = new Handler();
+        $middleware->type = "api";
+        $middleware->path = $path;
         return $result;
     }
 
