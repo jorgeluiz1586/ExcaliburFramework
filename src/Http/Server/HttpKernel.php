@@ -172,7 +172,7 @@ class HttpKernel implements KernelInterface
 
         return (object) [
             "route" => $route,
-            "params" => $queryString,
+            "params" => [...$queryString, "token" => str_replace("Bearer ", "", $_SERVER["HTTP_AUTHORIZATION"])],
         ];
     }
 
@@ -198,7 +198,7 @@ class HttpKernel implements KernelInterface
                     "SELECT * FROM tokens where token = '".$token."';")->fetchObject();
             } else {
                 header("HTTP/1.1 401 Unauthorized");
-                print_r("Error! Unauthorized");
+                print_r("Unauthorized");
                 die();
             }
         }
