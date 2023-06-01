@@ -108,16 +108,16 @@ class Route
         }
     }
 
-    private static function getControllerAndActionFromString(string $path, string $handle, string $method): object
+    private static function getControllerAndActionFromString(string $path, string $handle, string $method): void
     {
         if ($handle !== "" && str_contains($handle, "@")) {
             $controller = "Application\\Controllers\\".explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
             $handleObj = (object) ["controller" => $controller, "action" => $action];
-            return Router::setRoute("$method", "/api".($path === "/" ? "" : $path),
+            Router::setRoute("$method", "/api".($path === "/" ? "" : $path),
                                 $handleObj->controller, $handleObj->action);
         } else {
-            return Router::setWebRoute("$method", $path, $handle);
+            Router::setWebRoute("$method", $path, $handle);
         }
     }
 }
