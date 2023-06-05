@@ -9,16 +9,16 @@ use Excalibur\Framework\Route\Router;
 use Application\Http\Message\Request\Request;
 use Application\Http\Message\Response\Response;
 use Infrastructure\Helpers\View;
-use Excalibur\Framework\Http\Server\Helpers\BotChecker;
-use Excalibur\Framework\Http\Server\Helpers\SpaChecker;
-use Excalibur\Framework\Http\Server\Helpers\AssetChecker;
+use Excalibur\Framework\Http\Server\Helpers\OpenBotChecker;
+use Excalibur\Framework\Http\Server\Helpers\OpenSpaChecker;
+use Excalibur\Framework\Http\Server\Helpers\OpenAssetChecker;
 use Excalibur\Framework\Middlewares\MiddlewareHandler;
 
-class HttpKernel implements KernelInterface
+class OpenswooleHttpKernel implements KernelInterface
 {
     private MiddlewareHandler $middlewareHandler;
 
-    public function __construct()
+    public function __construct(private OpenSwoole\Http\Request $request, private OpenSwoole\Http\Response $response)
     {
         $this->middlewareHandler = new MiddlewareHandler();
     }
@@ -30,7 +30,7 @@ class HttpKernel implements KernelInterface
         $handle = $this->getRequestParamsAndRoutePath();
         $type   = $this->checkRouteType($handle->route);
 
-        if (AssetChecker::check()) {
+        if (OpenAssetChecker::check($this->request->server["request_uri"])) {
             return self::getDefaultFrontendFiles($handle->route, explode("/", $handle->route));
         }
 
@@ -58,39 +58,39 @@ class HttpKernel implements KernelInterface
             }
 
             if ($routeFound->route["controller"] === null) {
-                return print_r($routeFound->route["action"]($request, $response));
+                return $this->response->end($routeFound->route["action"]($request, $response));
             }
 
             $request->params = (object) $routeFound->params;
 
             self::checkMiddleware($routeFound->route);
 
-            return print_r($routeFound->route["controller"]->{$routeFound->route["action"]}($request, $response));
+            return $this->response->end($routeFound->route["controller"]->{$routeFound->route["action"]}($request, $response));
     }
 
     private function processWebRequest($routeFound)
     {
         if ($routeFound->route === null) {
             header("HTTP/1.1 404 Not Found");
-            return print_r("Page do not found");
+            return $this->response->end("Page do not found");
         } else {
-            if (BotChecker::check() || !SpaChecker::check()) {
+            if (OpenBotChecker::check($this->request->header["user-agent"]) || !OpenSpaChecker::check($this->request->server["request_uri"])) {
                 header("HTTP/1.1 200 OK");
                
                 header("Content-Type: text/html");
                 $result = [];
                 View::setView([...$routeFound->route]["view"]);
-                View::$isBot = BotChecker::check() ? "true" : "false";
+                View::$isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
                 View::$params = (object) $routeFound->params;
                 $result = View::render();
-                return print_r(implode("", $result));
+                return $this->response->end(implode("", $result));
             }
             header("HTTP/1.1 200 OK");
             header("Content-Type: text/html");
             $pages = [];
             foreach (Router::getWebRoutes() as $item) {
                 View::setView(explode("/", $item["view"])[1]);
-                View::$isBot = BotChecker::check() ? "true" : "false";
+                View::$isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
 
                 View::$params = (object) $routeFound->params;
                 $result = View::render();
@@ -99,7 +99,7 @@ class HttpKernel implements KernelInterface
                     "page" => explode("<!---->", explode("<div id=\"app\">", implode("", $result))[1])[0],
                 ];
             }
-            return print_r(json_encode($pages));
+            return $this->response->end(json_encode($pages));
         }
     }
 
@@ -124,21 +124,21 @@ class HttpKernel implements KernelInterface
     }
 
 
-    private static function getScript(array $pathArray)
+    private function getScript(array $pathArray)
     {
         header("Content-Type: application/javascript");
-        return print_r(file_get_contents("./src/WebUI/Assets/Scripts/".$pathArray[count($pathArray) - 1]));
+        return $this->response->end(file_get_contents("./src/WebUI/Assets/Scripts/".$pathArray[count($pathArray) - 1]));
     }
 
 
-    private static function getCSS(array $pathArray)
+    private function getCSS(array $pathArray)
     {
         header("Content-Type: text/css");
-        return print_r(file_get_contents("./src/WebUI/Assets/Styles/CSS/".$pathArray[count($pathArray) - 1]));
+        return $this->response->end(file_get_contents("./src/WebUI/Assets/Styles/CSS/".$pathArray[count($pathArray) - 1]));
     }
 
 
-    private static function getFavicon()
+    private function getFavicon()
     {
         header("Content-Type: image/x-icon");
         header("Content-Disposition:attachment; filename=\"favicon.icon\"");
@@ -157,23 +157,23 @@ class HttpKernel implements KernelInterface
 
     private function getRequestParamsAndRoutePath()
     {
-        $route = $_SERVER["REQUEST_URI"];
+        $route = $this->request->server["request_uri"];
 
         $queryString = [];
-        if (str_contains($_SERVER["REQUEST_URI"], "?")) {
-            if (str_contains($_SERVER["REQUEST_URI"], "&")) {
-                foreach (explode("&", explode("?", $_SERVER["REQUEST_URI"])[1]) as $query) {
+        if (str_contains($this->request->server["request_uri"], "?")) {
+            if (str_contains($this->request->server["request_uri"], "&")) {
+                foreach (explode("&", explode("?", $this->request->server["request_uri"])[1]) as $query) {
                     $queryKey   = explode("=", $query)[0];
                     $queryValue = explode("=", $query)[1];
                     $queryString["$queryKey"] = $queryValue;
                 };
-                $route = explode("?", $_SERVER["REQUEST_URI"])[0];
+                $route = explode("?", $this->request->server["request_uri"])[0];
             } else {
-                $query = explode("?", $_SERVER["REQUEST_URI"])[1];
+                $query = explode("?", $this->request->server["request_uri"])[1];
                 $queryKey   = explode("=", $query)[0];
                 $queryValue = explode("=", $query)[1];
                 $queryString["$queryKey"] = $queryValue;
-                $route = explode("?", $_SERVER["REQUEST_URI"])[0];
+                $route = explode("?", $this->request->server["request_uri"])[0];
             }
         }
 
@@ -189,14 +189,14 @@ class HttpKernel implements KernelInterface
 
         return (object) [
             "route" => $route,
-            "params" => [...$queryString, "token" => isset($_SERVER["HTTP_AUTHORIZATION"])
-                            ? str_replace("Bearer ", "", $_SERVER["HTTP_AUTHORIZATION"]): null],
+            "params" => [...$queryString, "token" => isset($this->request["authorization"])
+                            ? str_replace("Bearer ", "", $this->request["authorization"]): null],
         ];
     }
 
     private function getHttpMethod(): string
     {
-        return $_SERVER["REQUEST_METHOD"];
+        return $this->request->server["request_method"];
     }
 
     private function checkMiddleware(array $route)
