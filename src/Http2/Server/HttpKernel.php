@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Excalibur\Framework\Http2\Server;
 
-use Excalibur\Framework\Http2\Interfaces\KernelInterface;
+use Excalibur\Framework\Http\Interfaces\KernelInterface;
 use Excalibur\Framework\Route\Router;
 use Application\Http\Message\Request\Request;
 use Application\Http\Message\Response\Response;
