@@ -13,7 +13,7 @@ use Excalibur\Framework\Http\Server\Helpers\OpenBotChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenSpaChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenAssetChecker;
 use Excalibur\Framework\Middlewares\OpenMiddlewareHandler;
-use Excalibur\Framework\Http\Server\Header;
+// use Excalibur\Framework\Http\Server\Header;
 
 class OpenswooleHttpKernel implements KernelInterface
 {
@@ -21,8 +21,8 @@ class OpenswooleHttpKernel implements KernelInterface
 
     public function __construct(private \OpenSwoole\Http\Request $request, private \OpenSwoole\Http\Response $response)
     {
-        $this->middlewareHandler = new OpenMiddlewareHandler($response);
-        Header::setHeaders($this->request->header);
+        $this->middlewareHandler = new OpenMiddlewareHandler($this->request, $this->response);
+        //Header::setHeaders($this->request->header);
     }
 
     public function run()

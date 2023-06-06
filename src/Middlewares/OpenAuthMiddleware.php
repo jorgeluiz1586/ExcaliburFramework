@@ -11,7 +11,7 @@ use Excalibur\Framework\Http\Server\Response;
 
 class OpenAuthMiddleware implements MiddlewareHandlerInterface
 {
-    public function __construct(private $response)
+    public function __construct(private $request, private $response)
     {
         
     }
@@ -19,8 +19,8 @@ class OpenAuthMiddleware implements MiddlewareHandlerInterface
     public function handle(?string $middleware = null): void
     {
 
-        $token = isset((Header::getHeaders())['authorization'])
-        ? str_replace("Bearer ", "", (Header::getHeaders())['authorization']): null;
+        $token = isset($this->request->header['authorization'])
+        ? str_replace("Bearer ", "", $this->request->header['authorization']): null;
         if (gettype($token) === "string" && strlen($token) > 8) {
             $result = (object) Database::config()->query(
                 "SELECT 

@@ -12,7 +12,7 @@ class OpenMiddlewareHandler implements MiddlewareHandlerInterface
         "auth" => \Excalibur\Framework\Middlewares\OpenAuthMiddleware::class,
     ];
 
-    public function __construct(private $response)
+    public function __construct(private $request, private $response)
     {}
 
     public function handle(?string $middleware): void
@@ -28,6 +28,6 @@ class OpenMiddlewareHandler implements MiddlewareHandlerInterface
             throw new \LogicException("The $middleware middleware not found");
         }
 
-        (new $found[0]($this->response))->handle();
+        (new $found[0]($this->request, $this->response))->handle();
     }
 }
