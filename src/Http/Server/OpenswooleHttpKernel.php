@@ -13,7 +13,6 @@ use Excalibur\Framework\Http\Server\Helpers\OpenBotChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenSpaChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenAssetChecker;
 use Excalibur\Framework\Middlewares\OpenMiddlewareHandler;
-// use Excalibur\Framework\Http\Server\Header;
 
 class OpenswooleHttpKernel implements KernelInterface
 {
@@ -22,7 +21,6 @@ class OpenswooleHttpKernel implements KernelInterface
     public function __construct(private \OpenSwoole\Http\Request $request, private \OpenSwoole\Http\Response $response)
     {
         $this->middlewareHandler = new OpenMiddlewareHandler($this->request, $this->response);
-        //Header::setHeaders($this->request->header);
     }
 
     public function run()
@@ -129,14 +127,14 @@ class OpenswooleHttpKernel implements KernelInterface
     private function getScript(array $pathArray)
     {
         header("Content-Type: application/javascript");
-        return $this->response->end(file_get_contents("./src/WebUI/Assets/Scripts/".$pathArray[count($pathArray) - 1]));
+        return $this->response->sendFile("./src/WebUI/Assets/Scripts/".$pathArray[count($pathArray) - 1]);
     }
 
 
     private function getCSS(array $pathArray)
     {
         header("Content-Type: text/css");
-        return $this->response->end(file_get_contents("./src/WebUI/Assets/Styles/CSS/".$pathArray[count($pathArray) - 1]));
+        return $this->response->sendFile("./src/WebUI/Assets/Styles/CSS/".$pathArray[count($pathArray) - 1]);
     }
 
 
@@ -144,7 +142,7 @@ class OpenswooleHttpKernel implements KernelInterface
     {
         header("Content-Type: image/x-icon");
         header("Content-Disposition:attachment; filename=\"favicon.icon\"");
-        return readfile("./src/WebUI/Assets/Icons/favicon.ico");
+        return $this->response->sendFile("./src/WebUI/Assets/Icons/favicon.ico");
     }
 
 
