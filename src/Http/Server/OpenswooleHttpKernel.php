@@ -33,7 +33,7 @@ class OpenswooleHttpKernel implements KernelInterface
         $type   = $this->checkRouteType($handle->route);
 
         if (OpenAssetChecker::check($this->request->server["request_uri"])) {
-            return self::getDefaultFrontendFiles($handle->route, explode("/", $handle->route));
+            return $this->getDefaultFrontendFiles($handle->route, explode("/", $handle->route));
         }
 
         if ($type === "api") {
@@ -105,22 +105,22 @@ class OpenswooleHttpKernel implements KernelInterface
         }
     }
 
-    public static function getDefaultFrontendFiles(string $path, array $pathArray)
+    public function getDefaultFrontendFiles(string $path, array $pathArray)
     {
         header("HTTP/1.1 200 OK");
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
         if (str_contains($path, "/scripts")) {
-            return self::getScript($pathArray);
+            return $this->getScript($pathArray);
         }
 
         if (str_contains($path, "/css")) {
-            return self::getCSS($pathArray);
+            return $this->getCSS($pathArray);
         }
 
         if (str_contains($path, "/favicon")) {
-            return self::getFavicon();
+            return $this->getFavicon();
         }
 
     }
