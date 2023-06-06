@@ -17,7 +17,7 @@ use Excalibur\Framework\Http\Server\Header;
 
 class OpenswooleHttpKernel implements KernelInterface
 {
-    private MiddlewareHandler $middlewareHandler;
+    private OpenMiddlewareHandler $middlewareHandler;
 
     public function __construct(private \OpenSwoole\Http\Request $request, private \OpenSwoole\Http\Response $response)
     {
