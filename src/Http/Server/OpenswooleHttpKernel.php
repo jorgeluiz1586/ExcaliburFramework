@@ -191,8 +191,8 @@ class OpenswooleHttpKernel implements KernelInterface
 
         return (object) [
             "route" => $route,
-            "params" => [...$queryString, "token" => isset($this->request["authorization"])
-                            ? str_replace("Bearer ", "", $this->request["authorization"]): null],
+            "params" => [...$queryString, "token" => isset($this->request->header["authorization"])
+                            ? str_replace("Bearer ", "", $this->request->header["authorization"]): null],
         ];
     }
 
