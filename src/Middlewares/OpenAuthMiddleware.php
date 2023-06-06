@@ -11,6 +11,11 @@ use Excalibur\Framework\Http\Server\Response;
 
 class OpenAuthMiddleware implements MiddlewareHandlerInterface
 {
+    public function __construct(private $response)
+    {
+        
+    }
+
     public function handle(?string $middleware = null): void
     {
 
@@ -38,14 +43,14 @@ class OpenAuthMiddleware implements MiddlewareHandlerInterface
 
             if (!(isset($result->user_id) && isset($result->token_uuid))) {
                 header("HTTP/1.1 401 Unauthorized");
-                Response::end("Token Invalid");
+                $this->response->end("Token Invalid");
                 die();
             }
             $_SESSION["token"] = $result->token;
             $_SESSION["user"] = $result;
         } else {
             header("HTTP/1.1 401 Unauthorized");
-            Response::end("Unauthorized");
+            $this->response->end("Unauthorized");
             die();
         }
     }

@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Excalibur\Framework\Http\Server;
 
+use OpenSwoole\Http\Response;
+
 class Response
 {
-    private static $response;
+    public static $response;
 
     public static function end(string $response)
     {
-        self::$response->end($response);
+        if ($response !== null) {
+            self::$response->end($response);
+        }
     }
 
-    public static function setResponse(\OpenSwoole\Http\Response $response)
+    public static function setResponse(Response $response)
     {
         self::$response = $response;
     }
