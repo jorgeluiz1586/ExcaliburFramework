@@ -92,8 +92,7 @@ class Router
                         str_replace("Controller", "Service", array_reverse(explode("\\", $controller))[0]);
             $repository = "Infrastructure\\Data\\Repositories\\".
                         str_replace("Controller", "Repository", array_reverse(explode("\\", $controller))[0]);
-            $entity = "Domain\\Entities\\".str_replace("Controller", "", array_reverse(explode("\\", $controller))[0]);
-            $controllerObject = new $controller(new $service(new $repository(new $entity())));
+            $controllerObject = new $controller(new $service(new $repository()));
         }
 
         array_push(self::$routes,
