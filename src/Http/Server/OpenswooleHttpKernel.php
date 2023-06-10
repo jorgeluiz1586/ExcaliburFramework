@@ -91,6 +91,7 @@ class OpenswooleHttpKernel implements KernelInterface
             foreach (Router::getWebRoutes() as $item) {
                 View::setView(explode("/", $item["view"])[1]);
                 View::$isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
+                View::$isSpa = OpenSpaChecker::check($this->request->server["request_uri"]);
 
                 View::$params = (object) $routeFound->params;
                 $result = View::render();
