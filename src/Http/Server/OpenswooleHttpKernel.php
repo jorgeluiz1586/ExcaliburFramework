@@ -127,7 +127,7 @@ class OpenswooleHttpKernel implements KernelInterface
     private function getScript(array $pathArray)
     {
         header("Content-Type: application/javascript");
-        return $this->response->sendFile("./src/WebUI/Assets/Scripts/".$pathArray[count($pathArray) - 1]);
+        return $this->response->sendFile("./src/WebUI/Assets/Scripts/Javascript/".$pathArray[count($pathArray) - 1]);
     }
 
 
