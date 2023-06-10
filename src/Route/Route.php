@@ -110,7 +110,7 @@ class Route
     public static function apiResource(string $path, callable|string|array $handle): Handler
     {
         if (gettype($handle) === "string") {
-            $controller = "Application\\Controllers\\".explode("@", $handle)[0];
+            $controller = explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
 
             Router::setRoute("", "/api".($path === "/" ? "" : $path), $controller, $action);
@@ -125,7 +125,7 @@ class Route
     public static function resource(string $path, callable|string|array $handle): Handler
     {
         if (gettype($handle) === "string") {
-            $controller = "Application\\Controllers\\".explode("@", $handle)[0];
+            $controller = explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
 
             Router::setRoute("", "/api".($path === "/" ? "" : $path), $controller, $action);
@@ -140,7 +140,7 @@ class Route
     private static function getControllerAndActionFromString(string $path, string $handle, string $method): void
     {
         if ($handle !== "" && str_contains($handle, "@")) {
-            $controller = "Application\\Controllers\\".explode("@", $handle)[0];
+            $controller = explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
             $handleObj = (object) ["controller" => $controller, "action" => $action];
             Router::setRoute("$method", "/api".($path === "/" ? "" : $path),
