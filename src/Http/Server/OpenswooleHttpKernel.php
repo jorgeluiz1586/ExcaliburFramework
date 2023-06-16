@@ -91,7 +91,6 @@ class OpenswooleHttpKernel implements KernelInterface
             foreach (Router::getWebRoutes() as $item) {
                 View::setView(explode("/", $item["view"])[1]);
                 View::$isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
-                View::$isSpa = OpenSpaChecker::check($this->request->server["request_uri"]);
 
                 View::$params = (object) $routeFound->params;
                 $result = View::render();
@@ -127,8 +126,10 @@ class OpenswooleHttpKernel implements KernelInterface
 
     private function getScript(array $pathArray)
     {
+        $fullPath = implode("/", $pathArray);
+        $pathFormatted = explode("/scripts", $fullPath)[1];
         header("Content-Type: application/javascript");
-        return $this->response->sendFile("./src/WebUI/Assets/Scripts/Javascript/".$pathArray[count($pathArray) - 1]);
+        return $this->response->sendFile("./src/WebUI/Assets/Scripts/Javascript".$pathFormatted);
     }
 
 
