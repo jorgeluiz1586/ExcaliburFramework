@@ -6,8 +6,8 @@ namespace Excalibur\Framework\Http\Server;
 
 use Excalibur\Framework\Http\Interfaces\KernelInterface;
 use Excalibur\Framework\Route\Router;
-use Application\Http\Message\Request\Request;
-use Application\Http\Message\Response\Response;
+use WebUI\Requests\Request as WebRequest;
+use WebUI\Responses\Response as WebResponse;
 use Infrastructure\Helpers\View;
 use Excalibur\Framework\Http\Server\Helpers\OpenBotChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenSpaChecker;
@@ -71,36 +71,33 @@ class OpenswooleHttpKernel implements KernelInterface
     private function processWebRequest($routeFound)
     {
         if ($routeFound->route === null) {
-            header("HTTP/1.1 404 Not Found");
+            header("HTTP/2 404 Not Found");
             return $this->response->end("Page do not found");
-        } else {
-            if (OpenBotChecker::check($this->request->header["user-agent"]) || !OpenSpaChecker::check($this->request->server["request_uri"])) {
-                header("HTTP/1.1 200 OK");
-               
-                header("Content-Type: text/html");
-                $result = [];
-                View::setView([...$routeFound->route]["view"]);
-                View::$isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
-                View::$params = (object) $routeFound->params;
-                $result = View::render();
-                return $this->response->end(implode("", $result));
-            }
-            header("HTTP/1.1 200 OK");
-            header("Content-Type: text/html");
-            $pages = [];
-            foreach (Router::getWebRoutes() as $item) {
-                View::setView(explode("/", $item["view"])[1]);
-                View::$isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
-
-                View::$params = (object) $routeFound->params;
-                $result = View::render();
-                $pages[] = [
-                    "path" => $item["uri"],
-                    "page" => explode("<!---->", explode("<div id=\"app\">", implode("", $result))[1])[0],
-                ];
-            }
-            return $this->response->end(json_encode($pages));
         }
+
+        header("HTTP/2 200 OK");
+        header("Content-Type: text/html");
+
+        $request = (new WebRequest());
+        $response = (new WebResponse());
+
+        $input = file_get_contents("php://input");
+
+        $isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
+
+        $request->params = (object) [...((array) $routeFound->params), "isBot" => $isBot];
+
+        if ($input !== null || $input !== "") {
+            $request->body = (object) json_decode($input);
+        }
+
+        if ($routeFound->route["controller"] === null) {
+            return $this->response->end($routeFound->route["action"]($request, $response));
+        }
+
+        self::checkMiddleware($routeFound->route);
+
+        return $this->response->end($routeFound->route["controller"]->{$routeFound->route["action"]}($request, $response));
     }
 
     public function getDefaultFrontendFiles(string $path, array $pathArray)

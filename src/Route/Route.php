@@ -139,14 +139,20 @@ class Route
 
     private static function getControllerAndActionFromString(string $path, string $handle, string $method): void
     {
-        if ($handle !== "" && str_contains($handle, "@")) {
+        if (!str_contains($handle, "Web|") && str_contains($handle, "@")) {
             $controller = explode("@", $handle)[0];
             $action = explode("@", $handle)[1];
             $handleObj = (object) ["controller" => $controller, "action" => $action];
             Router::setRoute("$method", "/api".($path === "/" ? "" : $path),
                                 $handleObj->controller, $handleObj->action);
+        } else if (str_contains($handle, "Web|") && str_contains($handle, "@")) {
+            $controller = str_replace("Web|", "", explode("@", $handle)[0]);
+            $action = explode("@", $handle)[1];
+            $handleObj = (object) ["controller" => $controller, "action" => $action];
+            Router::setWebRoute("$method", ($path === "/" ? "/" : $path),
+                $handleObj->controller, $handleObj->action);
         } else {
-            Router::setWebRoute("$method", $path, $handle);
+            throw new \Exception("Error! Invalid router handler");
         }
     }
 }

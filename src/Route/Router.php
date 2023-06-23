@@ -102,33 +102,21 @@ class Router
     }
 
 
-    public static function setWebRoute(string $method, string $path, string $viewPath): void
+    public static function setWebRoute(string $method, string $path, string|null $controller, string|callable $action): void
     {
-        $view = "";
-        if (str_contains($path, '_')) {
-            $view = implode("", array_map(function ($item)
-            {
-                return ucfirst(strtolower($item));
-            }, explode("_", $path)));
-        } elseif (str_contains($path, '-')) {
-            $view = implode("", array_map(function ($item)
-            {
-                return ucfirst(strtolower($item));
-            }, explode("-", $path)));
-        } else {
-            if ($path === "/") {
-                $view = "/".ucfirst(strtolower("Home"));
-            } else {
-                $view = "/".ucfirst(implode("", (explode("/", strtolower($path)))));
-            }
+        $controllerObject = null;
+        if ($controller !== null) {
+            $controllerObject = "WebUI\\Controllers\\".$controller;
+            $service = "Application\\Services\\".
+                        str_replace("Controller", "Service", $controller);
+            $repository = "Infrastructure\\Data\\Repositories\\".
+                        str_replace("Controller", "Repository", $controller);
+            $controllerObject = new $controllerObject(new $service(new $repository()));
         }
 
-        if ($viewPath !== "" && explode("/", $viewPath)[1] === "Views") {
-            array_push(self::$webRoutes, ["uri" => $path, "method" => $method,
-            "view" => "/".array_reverse(explode("/", $viewPath))[0]]);
-        } else {
-            array_push(self::$webRoutes, ["uri" => $path, "method" => $method, "view" => $view."View"]);
-        }
+        array_push(self::$webRoutes,
+            ["method" => $method, "uri" => $path, "controller" => $controllerObject,
+                                    "action" => $action, "middleware" => ""]);
     }
     
     public static function setMiddlewareInRoute(string $path, string $middleware)
