@@ -6,6 +6,8 @@ namespace Excalibur\Framework\Http\Server;
 
 use Excalibur\Framework\Http\Interfaces\KernelInterface;
 use Excalibur\Framework\Route\Router;
+use Api\Requests\Request as ApiRequest;
+use Api\Responses\Response as ApiResponse;
 use WebUI\Requests\Request as WebRequest;
 use WebUI\Responses\Response as WebResponse;
 use Infrastructure\Helpers\View;
@@ -13,6 +15,7 @@ use Excalibur\Framework\Http\Server\Helpers\OpenBotChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenSpaChecker;
 use Excalibur\Framework\Http\Server\Helpers\OpenAssetChecker;
 use Excalibur\Framework\Middlewares\OpenMiddlewareHandler;
+use Intl\Translation;
 
 class OpenswooleHttpKernel implements KernelInterface
 {
@@ -44,14 +47,16 @@ class OpenswooleHttpKernel implements KernelInterface
     private function processApiRequest($routeFound)
     {
             if ($routeFound->route === null) {
-                header("HTTP/1.1 404 Not Found");
+                $this->response->status(404);
                 return "Error";
             }
 
-            $request = (new Request());
-            $response = (new Response());
+            $request = (new ApiRequest());
+            $response = (new ApiResponse());
 
             $input = file_get_contents("php://input");
+
+            $request->params = (object) $routeFound->params;
 
             if ($input !== null || $input !== "") {
                 $request->body = (object) json_decode($input);
@@ -61,8 +66,6 @@ class OpenswooleHttpKernel implements KernelInterface
                 return $this->response->end($routeFound->route["action"]($request, $response));
             }
 
-            $request->params = (object) $routeFound->params;
-
             self::checkMiddleware($routeFound->route);
 
             return $this->response->end($routeFound->route["controller"]->{$routeFound->route["action"]}($request, $response));
@@ -71,12 +74,12 @@ class OpenswooleHttpKernel implements KernelInterface
     private function processWebRequest($routeFound)
     {
         if ($routeFound->route === null) {
-            header("HTTP/2 404 Not Found");
+            $this->response->status(404);
             return $this->response->end("Page do not found");
         }
 
-        header("HTTP/2 200 OK");
-        header("Content-Type: text/html");
+        $this->response->status(200);
+        $this->response->header("Content-Type", "text/html");
 
         $request = (new WebRequest());
         $response = (new WebResponse());
@@ -85,7 +88,7 @@ class OpenswooleHttpKernel implements KernelInterface
 
         $isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
 
-        $request->params = (object) [...((array) $routeFound->params), "isBot" => $isBot];
+        $request->params = (object) [...((array) $routeFound->params), "isBot" => $isBot, "path" => $routeFound->route, "intl" => Translation::$languages];
 
         if ($input !== null || $input !== "") {
             $request->body = (object) json_decode($input);
@@ -102,10 +105,10 @@ class OpenswooleHttpKernel implements KernelInterface
 
     public function getDefaultFrontendFiles(string $path, array $pathArray)
     {
-        header("HTTP/1.1 200 OK");
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
+        $this->response->status(200);
+        $this->response->header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        $this->response->header("Cache-Control", "post-check=0, pre-check=0", false);
+        $this->response->header("Pragma", "no-cache");
         if (str_contains($path, "/scripts")) {
             return $this->getScript($pathArray);
         }
@@ -125,22 +128,22 @@ class OpenswooleHttpKernel implements KernelInterface
     {
         $fullPath = implode("/", $pathArray);
         $pathFormatted = explode("/scripts", $fullPath)[1];
-        header("Content-Type: application/javascript");
+        $this->response->header("Content-Type", "application/javascript");
         return $this->response->sendFile("./src/WebUI/Assets/Scripts/Javascript".$pathFormatted);
     }
 
 
     private function getCSS(array $pathArray)
     {
-        header("Content-Type: text/css");
+        $this->response->header("Content-Type", "text/css");
         return $this->response->sendFile("./src/WebUI/Assets/Styles/CSS/".$pathArray[count($pathArray) - 1]);
     }
 
 
     private function getFavicon()
     {
-        header("Content-Type: image/x-icon");
-        header("Content-Disposition:attachment; filename=\"favicon.icon\"");
+        $this->response->header("Content-Type", "image/x-icon");
+        $this->response->header("Content-Disposition", "attachment; filename=\"favicon.icon\"");
         return $this->response->sendFile("./src/WebUI/Assets/Icons/favicon.ico");
     }
 
@@ -159,20 +162,18 @@ class OpenswooleHttpKernel implements KernelInterface
         $route = $this->request->server["request_uri"];
 
         $queryString = [];
-        if (str_contains($this->request->server["request_uri"], "?")) {
-            if (str_contains($this->request->server["request_uri"], "&")) {
-                foreach (explode("&", explode("?", $this->request->server["request_uri"])[1]) as $query) {
+        if (isset($this->request->server["query_string"]) && strlen($this->request->server["query_string"]) > 0) {
+            if (str_contains($this->request->server["query_string"], "&")) {
+                foreach (explode("&", $this->request->server["query_string"]) as $query) {
                     $queryKey   = explode("=", $query)[0];
                     $queryValue = explode("=", $query)[1];
                     $queryString["$queryKey"] = $queryValue;
                 };
-                $route = explode("?", $this->request->server["request_uri"])[0];
             } else {
-                $query = explode("?", $this->request->server["request_uri"])[1];
+                $query = $this->request->server["query_string"];
                 $queryKey   = explode("=", $query)[0];
                 $queryValue = explode("=", $query)[1];
                 $queryString["$queryKey"] = $queryValue;
-                $route = explode("?", $this->request->server["request_uri"])[0];
             }
         }
 
