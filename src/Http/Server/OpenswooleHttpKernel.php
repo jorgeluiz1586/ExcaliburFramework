@@ -88,7 +88,15 @@ class OpenswooleHttpKernel implements KernelInterface
 
         $isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
 
-        $request->params = (object) [...((array) $routeFound->params), "isBot" => $isBot, "path" => $routeFound->route, "intl" => Translation::$languages];
+        $langs = ["br", "pt", "fr", "de", "it", "en"];
+        $l = "en";
+        foreach ($langs as $lang) {    
+            if (str_contains(strtolower($this->request->header["accept-language"]), "-".$lang)) {
+                $l = $lang;
+            }
+        }
+
+        $request->params = (object) [...((array) $routeFound->params), "isBot" => $isBot, "path" => $routeFound->route, "lang" => "$l", "intl" => Translation::$languages];
 
         if ($input !== null || $input !== "") {
             $request->body = (object) json_decode($input);
