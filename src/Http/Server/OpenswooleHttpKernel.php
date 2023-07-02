@@ -54,7 +54,7 @@ class OpenswooleHttpKernel implements KernelInterface
             $request = (new ApiRequest());
             $response = (new ApiResponse());
 
-            $input = file_get_contents("php://input");
+            $input = $this->request->getContent();
 
             $request->params = (object) $routeFound->params;
 
@@ -84,7 +84,7 @@ class OpenswooleHttpKernel implements KernelInterface
         $request = (new WebRequest());
         $response = (new WebResponse());
 
-        $input = file_get_contents("php://input");
+        $input = $this->request->getContent();
 
         $isBot = OpenBotChecker::check($this->request->header["user-agent"]) ? "true" : "false";
 
