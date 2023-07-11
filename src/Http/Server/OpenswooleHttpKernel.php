@@ -52,7 +52,7 @@ class OpenswooleHttpKernel implements KernelInterface
             }
 
             $request = (new ApiRequest());
-            $response = (new ApiResponse());
+            $response = (new ApiResponse($this->response));
 
             $input = $this->request->getContent();
 
@@ -167,7 +167,7 @@ class OpenswooleHttpKernel implements KernelInterface
 
     private function getRequestParamsAndRoutePath()
     {
-        $route = $this->request->server["request_uri"];
+        $route = Router::checkIfHasFinalDash($this->request->server["request_uri"]);
 
         $queryString = [];
         if (isset($this->request->server["query_string"]) && strlen($this->request->server["query_string"]) > 0) {

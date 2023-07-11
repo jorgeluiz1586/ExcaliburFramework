@@ -30,6 +30,19 @@ class Router
         ];
     }
 
+    public static function checkIfHasFinalDash($path)
+    {
+        $processedPath = $path;
+        if (strlen($path) >= 3) {
+            $pathParts = array_reverse(str_split($path));
+            if ($pathParts[0] === "/") {
+                $processedPath = implode(array_reverse(array_splice($pathParts, 1)));
+            }
+        }
+
+        return $processedPath;
+    }
+
     private static function getParamsInRoute(string $type, string $method, string $path)
     {
         $params = [];
