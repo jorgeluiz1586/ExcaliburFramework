@@ -63,12 +63,12 @@ class OpenswooleHttpKernel implements KernelInterface
             }
 
             if ($routeFound->route["controller"] === null) {
-                return $this->response->end($routeFound->route["action"]($request, $response));
+                return $routeFound->route["action"]($request, $response);
             }
 
             self::checkMiddleware($routeFound->route);
 
-            return $this->response->end($routeFound->route["controller"]->{$routeFound->route["action"]}($request, $response));
+            return $routeFound->route["controller"]->{$routeFound->route["action"]}($request, $response);
     }
 
     private function processWebRequest($routeFound)
