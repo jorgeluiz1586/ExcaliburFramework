@@ -129,6 +129,11 @@ class OpenswooleHttpKernel implements KernelInterface
             return $this->getFavicon();
         }
 
+        if (str_contains($path, "/images")) {
+            $fullPath = implode("/", $pathArray);
+            $pathFormatted = explode("/images", $fullPath)[1];
+            return $this->response->sendFile("./src/WebUI/Assets/Images".$pathFormatted);
+        }
     }
 
 

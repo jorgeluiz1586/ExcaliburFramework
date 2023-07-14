@@ -13,6 +13,7 @@ class OpenAssetChecker implements OpenCheckerInterface
         return
             str_contains($value, "/scripts") ||
             str_contains($value, "/css") ||
-            str_contains($value, "/favicon");
+            str_contains($value, "/favicon") ||
+            str_contains($value, "/images");
     }
 }
